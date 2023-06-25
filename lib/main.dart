@@ -3,6 +3,7 @@ import 'package:foodapp/pages/categorypage.dart';
 import 'package:foodapp/pages/mealpage.dart';
 import 'package:foodapp/pages/tab_screen.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 final theme = ThemeData(
   useMaterial3: true,
@@ -14,7 +15,7 @@ final theme = ThemeData(
 );
 
 void main() {
-  runApp(const App());
+  runApp(const ProviderScope(child: const App()));
 }
 
 class App extends StatelessWidget {

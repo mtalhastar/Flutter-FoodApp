@@ -2,21 +2,23 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:foodapp/model/meal.dart';
 import 'package:transparent_image/transparent_image.dart';
-import 'package:foodapp/data/Favourites.dart';
+import 'package:foodapp/provider/favouriteProvider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class Meal_Detail extends StatefulWidget {
+class Meal_Detail extends ConsumerStatefulWidget {
   const Meal_Detail(this.meal, {super.key});
   final Meal meal;
   @override
-  State<Meal_Detail> createState() {
+  ConsumerState<Meal_Detail> createState() {
     // TODO: implement createState
     return _Meal_Detail();
   }
 }
 
-class _Meal_Detail extends State<Meal_Detail> {
+class _Meal_Detail extends ConsumerState<Meal_Detail> {
   String mealtext = '';
   bool clicked = false;
+
   void mealStepstotal() {
     mealtext = '';
     for (final meal in widget.meal.steps) {
@@ -26,6 +28,9 @@ class _Meal_Detail extends State<Meal_Detail> {
 
   @override
   Widget build(BuildContext context) {
+    final favouriteMeals = ref.watch(mealprov);
+    final notifiers = ref.watch(mealprov.notifier);
+    final contains = favouriteMeals.contains(widget.meal);
     mealStepstotal();
     // TODO: implement build
     return Scaffold(
@@ -42,23 +47,23 @@ class _Meal_Detail extends State<Meal_Detail> {
                   icon: const Icon(Icons.favorite),
                   style: ButtonStyle(
                       foregroundColor: MaterialStatePropertyAll(
-                          clicked ? Colors.red : Colors.white)),
+                          contains ? Colors.red : Colors.white)),
                   onPressed: () {
                     setState(() {
                       if (clicked == false) {
                         clicked = true;
                         if (!(favouriteMeals.contains(widget.meal))) {
-                          favouriteMeals.add(widget.meal);
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(content: Text('Added to Favorites'),
-                            duration: Duration(seconds: 2),)
-                          
-                        );
+                          notifiers.addFavouriteMeals(widget.meal);
+                          ScaffoldMessenger.of(context)
+                              .showSnackBar(const SnackBar(
+                            content: Text('Added to Favorites'),
+                            duration: Duration(seconds: 2),
+                          ));
                         }
                       } else {
                         clicked = false;
-                        favouriteMeals.remove(widget.meal);
-                               ScaffoldMessenger.of(context)
+                        notifiers.removeMeals(widget.meal);
+                        ScaffoldMessenger.of(context)
                             .showSnackBar(const SnackBar(
                           content: Text('Removed from favourites'),
                           duration: Duration(seconds: 2),

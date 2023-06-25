@@ -41,7 +41,7 @@ class MainDrawer extends StatelessWidget {
         ),
         ListTile(
           title: const Text(
-            'Favorites',
+            'Filters',
             style: TextStyle(color: Colors.white),
           ),
           onTap: () {

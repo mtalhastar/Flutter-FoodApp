@@ -1,18 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:foodapp/model/meal.dart';
 import 'package:foodapp/pages/categorypage.dart';
 import 'package:foodapp/pages/mealpage.dart';
-import 'package:foodapp/data/Favourites.dart';
 import 'package:foodapp/pages/side_drawer.dart';
-class TabsScreen extends StatefulWidget {
+import 'package:foodapp/provider/favouriteProvider.dart';
+
+class TabsScreen extends ConsumerStatefulWidget {
   @override
-  State<TabsScreen> createState() {
+  ConsumerState<TabsScreen> createState() {
     // TODO: implement createState
     return _TabsScreenState();
   }
 }
 
-class _TabsScreenState extends State<TabsScreen> {
+class _TabsScreenState extends ConsumerState<TabsScreen> {
   int selectedPageIndex = 0;
   String title = 'Category';
   void SelectPage(int index) {
@@ -23,10 +25,12 @@ class _TabsScreenState extends State<TabsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    
     Widget activePage = const CategoryPage();
+    final favouriteMeal = ref.watch(mealprov);
     if (selectedPageIndex == 1) {
       setState(() {
-         activePage = MealPage('j', favouriteMeals);
+        activePage = MealPage('j', favouriteMeal);
         title = 'Favourite';
       });
     } else {
